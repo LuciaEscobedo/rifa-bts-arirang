@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rifa BTS ARIRANG - Rifas Kpop AR</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(ellipse at top, #2a0a0a 0%, #111 60%);
+  color: #fff;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 2rem 1rem 1.2rem;
+  position: relative;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+.logo-circle {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: #cc0000;
+  border: 3px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #000; }
+
+.logo-lines {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: #cc0000;
+  border: 3px solid #fff;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px;
+}
+
+.logo-line { width: 22px; height: 3px; background: #000; border-radius: 1px; }
+
+.logo-i {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: #cc0000;
+  border: 3px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.logo-i-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+
+.logo-i-bar { width: 18px; height: 3px; background: #000; border-radius: 1px; }
+.logo-i-stem { width: 3px; height: 10px; background: #000; border-radius: 1px; }
+
+header h1 {
+  font-size: 2.6rem;
+  color: #e00;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 20px rgba(220,0,0,0.5);
+  margin-bottom: 0.2rem;
+}
+
+header .subtitulo {
+  font-size: 1rem;
+  color: #aaa;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.precios-info {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.precio-badge {
+  background: rgba(220,0,0,0.15);
+  border: 1px solid rgba(220,0,0,0.5);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  color: #ff8888;
+}
+
+.leyenda {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 0.7rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border-top: 1px solid #1f1f1f;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.leyenda-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.78rem; color: #999;
+}
+
+.corazon-leyenda {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.grilla-wrapper {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 0.5rem;
+}
+
+.grilla-titulo {
+  text-align: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.grilla-titulo h2 {
+  font-size: 1.4rem;
+  color: #e00;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.grilla-titulo p {
+  font-size: 0.75rem;
+  color: #777;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+}
+
+.num-btn {
+  aspect-ratio: 1;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s;
+}
+
+.num-btn:hover:not(:disabled) { transform: scale(1.15); }
+.num-btn:active:not(:disabled) { transform: scale(0.95); }
+.num-btn:disabled { cursor: not-allowed; }
+
+.corazon-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.num-label {
+  position: absolute;
+  font-size: clamp(7px, 1.8vw, 11px);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+  line-height: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(5%);
+}
+
+.num-label.oscuro { color: #111; text-shadow: none; }
+
+.loader {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #2a2a2a;
+  border-top-color: #e00;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.panel {
+  max-width: 460px;
+  margin: 1rem auto 2rem;
+  padding: 0 1rem;
+}
+
+.seleccion-card {
+  background: rgba(220,0,0,0.08);
+  border: 1px solid rgba(220,0,0,0.25);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+.seleccion-card.visible { display: block; }
+
+.seleccion-card h3 {
+  font-size: 0.72rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.6rem;
+}
+
+.nums-tags {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-bottom: 0.8rem;
+}
+
+.num-tag {
+  background: #e00;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.precio-total {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.precio-total span { color: #ff6666; }
+
+.form-group { margin-bottom: 0.9rem; }
+
+.form-group label {
+  display: block;
+  font-size: 0.72rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1.5px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus { border-color: #e00; }
+.form-group input::placeholder { color: #444; }
+
+.btn-pagar {
+  width: 100%;
+  padding: 15px;
+  background: #009ee3;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-pagar:hover:not(:disabled) { background: #0088cc; transform: translateY(-1px); }
+.btn-pagar:disabled { background: #333; cursor: not-allowed; color: #666; }
+
+.mp-logo {
+  font-size: 1.1rem;
+  font-weight: 900;
+  background: #fff;
+  color: #009ee3;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: -0.5px;
+}
+
+.btn-limpiar {
+  width: 100%;
+  padding: 11px;
+  background: transparent;
+  color: #666;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+
+.btn-limpiar:hover { border-color: #555; color: #aaa; }
+
+.toast {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 0.88rem;
+  color: #fff;
+  transition: transform 0.3s ease;
+  z-index: 999;
+  max-width: 88vw;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { border-color: #cc0000; }
+.toast.success { border-color: #00a650; }
+.toast.warning { border-color: #f59e0b; }
+
+#modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#modal-overlay.visible { display: flex; }
+
+.modal {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 18px;
+  padding: 2rem 1.5rem;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-emoji { font-size: 3.5rem; margin-bottom: 0.8rem; }
+.modal h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.modal p { color: #aaa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; }
+
+.btn-modal {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #e00;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.btn-modal:hover { background: #cc0000; }
+
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #333;
+  font-size: 0.75rem;
+  border-top: 1px solid #1a1a1a;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-circle"><div class="logo-dot"></div></div>
+    <div class="logo-lines">
+      <div class="logo-line"></div>
+      <div class="logo-line"></div>
+      <div class="logo-line"></div>
+    </div>
+    <div class="logo-i">
+      <div class="logo-i-inner">
+        <div class="logo-i-bar"></div>
+        <div class="logo-i-stem"></div>
+        <div class="logo-i-bar"></div>
+      </div>
+    </div>
+  </div>
+  <h1>Rifa</h1>
+  <p class="subtitulo">BTS ARIRANG</p>
+  <div class="precios-info">
+    <span class="precio-badge">1 número → $2.000</span>
+    <span class="precio-badge">2 números → $3.000</span>
+    <span class="precio-badge">3+ → se agrupan de a pares</span>
+  </div>
+</header>
+
+<div class="leyenda">
+  <div class="leyenda-item"><span class="corazon-leyenda" style="color:#2a2a2a;text-shadow:0 0 0 #555,0 0 0 #555;">🩶</span> Libre</div>
+  <div class="leyenda-item"><span class="corazon-leyenda">❤️</span> Seleccionado</div>
+  <div class="leyenda-item"><span class="corazon-leyenda">🧡</span> Reservado</div>
+  <div class="leyenda-item"><span class="corazon-leyenda">🩷</span> Vendido</div>
+</div>
+
+<div class="grilla-wrapper">
+  <div class="grilla-titulo">
+    <h2>Rifa BTS ARIRANG</h2>
+    <p>Seleccioná tu número de la suerte</p>
+  </div>
+
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    Cargando números...
+  </div>
+
+  <div class="grilla" id="grilla" style="display:none"></div>
+</div>
+
+<div class="panel" id="panel">
+  <div class="seleccion-card" id="seleccion-card">
+    <h3>Tu selección</h3>
+    <div class="nums-tags" id="nums-tags"></div>
+    <div class="precio-total">Total: <span id="precio-display">$0</span></div>
+  </div>
+
+  <div class="form-group">
+    <label>Tu nombre completo</label>
+    <input type="text" id="input-nombre" placeholder="Ej: Valentina García" maxlength="60">
+  </div>
+
+  <div class="form-group">
+    <label>Tu Instagram</label>
+    <input type="text" id="input-instagram" placeholder="@tu_usuario" maxlength="60">
+  </div>
+
+  <button class="btn-pagar" id="btn-pagar" disabled onclick="iniciarPago()">
+    <span class="mp-logo">MP</span> Pagar con Mercado Pago
+  </button>
+  <button class="btn-limpiar" onclick="limpiarSeleccion()">Limpiar selección</button>
+</div>
+
+<div id="modal-overlay">
+  <div class="modal">
+    <div class="modal-emoji" id="modal-emoji">🎉</div>
+    <h2 id="modal-titulo">¡Pago exitoso!</h2>
+    <p id="modal-texto">Tus números quedaron confirmados. ¡Mucha suerte ARMY! 💜</p>
+    <button class="btn-modal" onclick="cerrarModal()">Volver a la rifa</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  Rifas Kpop AR &bull; Pagos procesados por Mercado Pago &bull; Argentina
+</footer>
+
+<script>
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwSMwL55hsGE861EsE-AJfw5VTwHznGwDINnGQWCw4cyhJvIQj7xqKHEc0VgZATIerh/exec";
+const MP_PUBLIC_KEY = "APP_USR-89f80339-bb77-41d4-947c-4230e03a8c09";
+
+let numerosSeleccionados = [];
+let estadoNumeros = [];
+
+function calcularPrecio(cantidad) {
+  const pares = Math.floor(cantidad / 2);
+  const resto = cantidad % 2;
+  return pares * 3000 + resto * 2000;
+}
+
+function formatPrecio(n) {
+  return '$' + n.toLocaleString('es-AR');
+}
+
+function mostrarToast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (tipo || '');
+  setTimeout(() => { t.className = 'toast'; }, 3800);
+}
+
+function actualizarPanel() {
+  const card = document.getElementById('seleccion-card');
+  const tags = document.getElementById('nums-tags');
+  const precio = document.getElementById('precio-display');
+  const btn = document.getElementById('btn-pagar');
+  const nombre = document.getElementById('input-nombre').value.trim();
+  const ig = document.getElementById('input-instagram').value.trim();
+
+  if (numerosSeleccionados.length === 0) {
+    card.classList.remove('visible');
+    btn.disabled = true;
+    return;
+  }
+
+  card.classList.add('visible');
+  const sorted = [...numerosSeleccionados].sort((a, b) => a - b);
+  tags.innerHTML = sorted.map(n => `<span class="num-tag">${n}</span>`).join('');
+  precio.textContent = formatPrecio(calcularPrecio(numerosSeleccionados.length));
+  btn.disabled = !(nombre && ig);
+}
+
+document.getElementById('input-nombre').addEventListener('input', actualizarPanel);
+document.getElementById('input-instagram').addEventListener('input', actualizarPanel);
+
+function toggleNumero(n) {
+  const e = estadoNumeros[n - 1];
+  if (!e || e.estado !== 'libre') return;
+  const idx = numerosSeleccionados.indexOf(n);
+  if (idx === -1) {
+    numerosSeleccionados.push(n);
+  } else {
+    numerosSeleccionados.splice(idx, 1);
+  }
+  renderGrilla();
+  actualizarPanel();
+}
+
+function limpiarSeleccion() {
+  numerosSeleccionados = [];
+  renderGrilla();
+  actualizarPanel();
+}
+
+function corazonSVG(color, stroke) {
+  return `<svg class="corazon-svg" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 85 C50 85 5 55 5 28 C5 14 16 5 28 5 C37 5 45 10 50 18 C55 10 63 5 72 5 C84 5 95 14 95 28 C95 55 50 85 50 85Z"
+      fill="${color}" stroke="${stroke}" stroke-width="3"/>
+  </svg>`;
+}
+
+function renderGrilla() {
+  const grilla = document.getElementById('grilla');
+  grilla.innerHTML = '';
+
+  for (let i = 1; i <= 100; i++) {
+    const e = estadoNumeros[i - 1];
+    const btn = document.createElement('button');
+    btn.className = 'num-btn';
+
+    const seleccionado = numerosSeleccionados.includes(i);
+    let color, stroke, labelClass;
+
+    if (!e || e.estado === 'libre') {
+      if (seleccionado) {
+        color = '#e00';
+        stroke = '#ff4444';
+        labelClass = '';
+      } else {
+        color = '#2a2a2a';
+        stroke = '#444';
+        labelClass = '';
+      }
+    } else if (e.estado === 'reservado') {
+      color = '#f59e0b';
+      stroke = '#d97706';
+      labelClass = 'oscuro';
+      btn.disabled = true;
+      btn.title = 'Reservado - expira en 30 min';
+    } else if (e.estado === 'vendido') {
+      color = '#ff69b4';
+      stroke = '#e05090';
+      labelClass = '';
+      btn.disabled = true;
+      btn.title = e.nombre ? `Vendido a ${e.nombre}` : 'Vendido';
+    } else {
+      color = '#2a2a2a';
+      stroke = '#444';
+      labelClass = '';
+    }
+
+    btn.innerHTML = corazonSVG(color, stroke) +
+      `<span class="num-label ${labelClass}">${i}</span>`;
+
+    if (!btn.disabled) btn.onclick = () => toggleNumero(i);
+    grilla.appendChild(btn);
+  }
+}
+
+async function cargarNumeros() {
+  try {
+    const res = await fetch(BACKEND_URL + '?action=getNumbers', { redirect: 'follow' });
+    const data = await res.json();
+    estadoNumeros = data;
+    document.getElementById('loader').style.display = 'none';
+    const g = document.getElementById('grilla');
+    g.style.display = 'grid';
+    renderGrilla();
+  } catch (err) {
+    document.getElementById('loader').innerHTML =
+      '<p style="color:#e00">Error al cargar. Recargá la página.</p>';
+    console.error(err);
+  }
+}
+
+async function iniciarPago() {
+  const nombre = document.getElementById('input-nombre').value.trim();
+  const instagram = document.getElementById('input-instagram').value.trim();
+
+  if (!nombre || !instagram) {
+    mostrarToast('Completá tu nombre e Instagram antes de pagar.', 'error');
+    return;
+  }
+  if (numerosSeleccionados.length === 0) {
+    mostrarToast('Seleccioná al menos un número.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btn-pagar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="mp-logo">MP</span> Procesando...';
+
+  try {
+    // 1. Reservar en Sheets
+    const resReserva = await fetch(BACKEND_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'reserve',
+        numeros: numerosSeleccionados,
+        nombre,
+        instagram
+      })
+    });
+    const dataReserva = await resReserva.json();
+
+    if (!dataReserva.ok) {
+      mostrarToast(dataReserva.error || 'Ese número ya fue tomado. Elegí otro.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="mp-logo">MP</span> Pagar con Mercado Pago';
+      await cargarNumeros();
+      return;
+    }
+
+    // 2. Crear preferencia desde el servidor (token seguro)
+    const resPref = await fetch(BACKEND_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'createPreference',
+        numeros: numerosSeleccionados,
+        nombre,
+        instagram,
+        urlBase: window.location.href.split('?')[0]
+      })
+    });
+    const dataPref = await resPref.json();
+
+    if (dataPref.ok && dataPref.init_point) {
+      window.location.href = dataPref.init_point;
+    } else {
+      throw new Error(dataPref.error || 'Error al crear el pago');
+    }
+
+  } catch (err) {
+    mostrarToast('Error al conectar. Intentá de nuevo.', 'error');
+    console.error(err);
+    btn.disabled = false;
+    btn.innerHTML = '<span class="mp-logo">MP</span> Pagar con Mercado Pago';
+  }
+}
+
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('visible');
+}
+
+async function manejarRetornoMP() {
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('status');
+  const nums = params.get('nums');
+  const paymentId = params.get('payment_id') || params.get('collection_id') || 'manual';
+
+  if (!status) return;
+  history.replaceState({}, '', window.location.pathname);
+
+  if (status === 'approved') {
+    const numerosArr = nums ? nums.split(',').map(Number) : [];
+    if (numerosArr.length > 0) {
+      try {
+        await fetch(BACKEND_URL, {
+          method: 'POST',
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            action: 'confirm',
+            payment_id: paymentId,
+            numeros: numerosArr
+          })
+        });
+      } catch (e) { console.error(e); }
+    }
+    document.getElementById('modal-emoji').textContent = '🎉';
+    document.getElementById('modal-titulo').textContent = '¡Pago confirmado!';
+    document.getElementById('modal-texto').textContent =
+      `Tus números ${nums} quedaron reservados. ¡Mucha suerte ARMY! 💜`;
+    document.getElementById('modal-overlay').classList.add('visible');
+
+  } else if (status === 'failure') {
+    mostrarToast('El pago no se completó. Los números fueron liberados.', 'error');
+  } else if (status === 'pending') {
+    mostrarToast('Pago pendiente. Avisanos por Instagram cuando se acredite 💜', 'warning');
+  }
+}
+
+manejarRetornoMP();
+cargarNumeros();
+setInterval(cargarNumeros, 45000);
+</script>
+</body>
+</html>
